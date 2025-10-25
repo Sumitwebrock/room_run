@@ -1,0 +1,47 @@
+/* Custom Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    scroll-behavior: smooth;
+}
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left:0; top:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+}
+.close {
+    float:right;
+    font-size:28px;
+    font-weight:bold;
+    cursor:pointer;
+}
+.close:hover { color:black; }
+.hidden { display:none; }
+.dashboard { display:none; }
+.logged-in .main-content { display:none; }
+.logged-in .dashboard { display:block; }
+.chat-message.user { text-align:right; background:#3b82f6; color:white; padding:8px; margin-bottom:8px; border-radius:5px;}
+.chat-message.bot { text-align:left; background:#f0f0f0; color:black; padding:8px; margin-bottom:8px; border-radius:5px;}

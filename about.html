@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meet Our Developers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #060b1f, #000);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 80px;
+      font-size: 2.5rem;
+      color: #00aaff;
+      font-weight: 700;
+      text-shadow: 0 0 10px #00aaff;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 0px #00aaff; }
+      to { text-shadow: 0 0 20px #00ffff; }
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 60px 20px;
+    }
+
+    .card {
+      width: 260px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 170, 255, 0.2);
+      transition: transform 0.4s, box-shadow 0.4s;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 170, 255, 0.5);
+    }
+
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-bottom: 2px solid rgba(0, 170, 255, 0.5);
+    }
+
+    .info {
+      padding: 15px;
+    }
+
+    .info h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .info p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .links {
+      margin-top: 10px;
+    }
+
+    .links a {
+      color: #00aaff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .links a:hover {
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #888;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Meet Our Developers 👨‍💻</h1>
+
+  <div class="container">
+
+    <div class="card">
+      <img src="https://media.licdn.com/dms/image/v2/D5603AQHoqeJogEzYnQ/profile-displayphoto-scale_200_200/B56ZiDRzmmHMAo-/0/1754549140422?e=1762992000&v=beta&t=W_xA3FGZyS5N_AthOJ-eH5kg77HhlrBK2NCU3qQPZSE" alt=sumit>
+      <div class="info">
+        <h3>Sumit Sahoo</h3>
+        <p>@sumitgraphicwala<br>Frontend Developer</p>
+        <div class="links">
+          <a href="#">GitHub</a> | <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="a">
+      <div class="info">
+        <h3> Bhargav</h3>
+        <p>@Bhargava<br>backend   </p>
+        <div class="links">
+          <a href="#">GitHub</a> | <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="0" alt="a">
+      <div class="info">
+        <h3>Mishi Jha</h3>
+        <p>@designs<br>UI/UX Designer</p>
+        <div class="links">
+          <a href="#">GitHub</a> | <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="0" alt="An">
+      <div class="info">
+        <h3>Aryangupta</h3>
+        <p>@av<br> Engineer</p>
+        <div class="links">
+          <a href="#">GitHub</a> | <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>© 2025 RoomRun Team. Crafted with 💙 by the Dev Squad.</footer>
+
+</body>
+</html>

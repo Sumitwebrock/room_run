@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Room Run - Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+<header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+  <div class="flex items-center gap-6">
+    <h1 class="text-xl font-bold">Room Run</h1>
+    <nav><a href="/explore.html" class="hover:text-blue-200 transition">Explore</a></nav>
+    <nav><a href="/index.html" class="hover:text-blue-200 transition">Home</a></nav>
+    
+  </div>
+  <div class="flex items-center gap-4">
+    <span id="user-name" class="font-medium"></span>
+    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Logout</button>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto p-6">
+  <section class="mb-8 bg-white rounded shadow p-6">
+    <h2 class="text-2xl font-semibold mb-4">Quick Actions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <a href="/explore.html" class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+        
+        <div class="flex-1">
+          <h3 class="font-semibold text-blue-700">Explore & Order</h3>
+          <p class="text-sm text-blue-600">Place new orders and explore options</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <section class="mb-8 bg-white rounded shadow p-6">
+    <h2 class="text-2xl font-semibold mb-2">My Account</h2>
+    <div id="account" class="text-gray-700"></div>
+  </section>
+
+  <section class="mb-8 bg-white rounded shadow p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-semibold">My Orders</h2>
+      <button id="refreshOrders" class="text-sm text-blue-600 hover:underline">Refresh</button>
+    </div>
+    <div id="ordersContainer" class="space-y-4">
+      <p class="text-sm text-gray-500">Loading orders...</p>
+    </div>
+  </section>
+</main>
+
+<section class="mb-8 bg-white rounded shadow p-6">
+  <h2 class="text-2xl font-semibold mb-4">Track Orders</h2>
+  <div class="flex gap-4 mb-6">
+    <input type="text" id="trackingId" placeholder="Enter Tracking ID" class="flex-1 p-2 border rounded">
+    <button id="trackBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Track</button>
+  </div>
+  <div id="trackingResult"></div>
+</section>
+
+<script>
+const apiBase = 'http://localhost:3001'; // Java backend
+
+function requireAuth() {
+  const raw = localStorage.getItem('user');
+  if (!raw) { window.location.href = '/login.html'; return null; }
+  try { return JSON.parse(raw); } catch { localStorage.removeItem('user'); window.location.href = '/login.html'; return null; }
+}
+const user = requireAuth();
+if (!user) throw 0;
+const uid = user.id || user._id || user.userId;
+
+document.getElementById('user-name').textContent = user.username || user.name || user.email || 'User';
+document.getElementById('account').innerHTML = `<p><strong>Name:</strong> ${escapeHtml(user.username||user.name||'-')}</p><p><strong>Email:</strong> ${escapeHtml(user.email||'-')}</p>`;
+document.getElementById('logoutBtn').addEventListener('click', ()=>{ localStorage.removeItem('user'); window.location.href='/login.html'; });
+
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function statusClass(s){ switch((s||'').toLowerCase()){ case 'placed': return 'bg-blue-100 text-blue-800'; case 'confirmed': return 'bg-yellow-100 text-yellow-800'; case 'processing': return 'bg-purple-100 text-purple-800'; case 'out_for_delivery': return 'bg-orange-100 text-orange-800'; case 'delivered': return 'bg-green-100 text-green-800'; default: return 'bg-gray-100 text-gray-800'; } }
+
+async function loadOrders(){
+  const c = document.getElementById('ordersContainer');
+  c.innerHTML = '<p class="text-sm text-gray-500">Loading orders...</p>';
+  // ...existing code...
+if (!uid) { c.innerHTML = '<p class="text-red-500">No user id found. Login again.</p>'; return; }
+try {
+  const apiBase = 'http://localhost:3000'; // Java backend
+  const res = await fetch(`${apiBase}/api/orders/${encodeURIComponent(uid)}`, { cache: 'no-store' });
+  const data = await res.json().catch(()=>null);
+  if (!res.ok) { c.innerHTML = `<p class="text-red-500">${escapeHtml((data&&data.message)||res.statusText)}</p>`; return; }
+  const orders = Array.isArray(data) ? data : (data && data.orders ? data.orders : []);
+  // ...
+    if (!orders || orders.length===0) { c.innerHTML = '<p class="text-gray-600">No orders yet.</p>'; return; }
+    c.innerHTML = orders.map(o=>{
+      // ...existing code...
+      
+  
+      const created = o.createdAt ? new Date(o.createdAt).toLocaleString() : '-';
+      const itemsHtml = (o.items||[]).map(it=>`<div class="text-sm">${escapeHtml(it.name)} × ${escapeHtml(String(it.quantity||1))}${it.room?` <span class="text-gray-500">(${escapeHtml(it.room)})</span>`:''}</div>`).join('');
+      const id = escapeHtml(o.trackingId||o._id||o.id||'');
+      return `<div class="border rounded p-4 bg-gray-50">
+        <div class="flex justify-between items-start">
+          <div><div class="font-medium">Order ID: ${id}</div><div class="text-sm text-gray-600">${created}</div></div>
+          <div class="px-3 py-1 rounded ${statusClass(o.status)}">${escapeHtml(o.status||'placed')}</div>
+        </div>
+        <div class="mt-3 space-y-1">${itemsHtml}</div>
+      </div>`;
+    }).join('');
+  } catch (err) { console.error(err); c.innerHTML = '<p class="text-red-500">Failed to load orders. See console.</p>'; }
+}
+document.getElementById('refreshOrders').addEventListener('click', loadOrders);
+loadOrders();
+
+async function trackOrder(){
+  const tid = document.getElementById('trackingId').value.trim();
+  const out = document.getElementById('trackingResult'); out.innerHTML='';
+  if (!tid) { out.innerHTML = '<p class="text-red-500">Enter tracking ID</p>'; return; }
+  try {
+    const res = await fetch(`${apiBase}/api/orders/track/${encodeURIComponent(tid)}`);
+    if (!res.ok) { const d = await res.json().catch(()=>null); out.innerHTML = `<p class="text-red-500">${escapeHtml((d&&d.message) || 'Order not found')}</p>`; return; }
+    const o = await res.json();
+    const created = o.createdAt ? new Date(o.createdAt).toLocaleString() : '-';
+    const itemsHtml = (o.items||[]).map(it=>`<div>${escapeHtml(it.name)} × ${escapeHtml(String(it.quantity||1))} ${it.price?` - ₹${escapeHtml(String(it.price))}`:''}</div>`).join('');
+    out.innerHTML = `<div class="border rounded p-4"><div class="flex justify-between items-start mb-3">
+      <div><p class="font-semibold">Order: ${escapeHtml(o.trackingId||o._id||o.id||'')}</p><p class="text-sm text-gray-600">Placed: ${created}</p></div>
+      <span class="px-3 py-1 rounded ${statusClass(o.status)}">${escapeHtml(o.status||'placed')}</span>
+    </div><div class="space-y-2">${itemsHtml}</div></div>`;
+  } catch (err) { console.error(err); out.innerHTML = '<p class="text-red-500">Failed to track order</p>'; }
+}
+document.getElementById('trackBtn').addEventListener('click', trackOrder);
+</script>
+
+</body>
+</html>

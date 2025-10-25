@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoomRun – Deliveries to Your Hostel Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
+  <style>
+    /* ---------- Animated Gradient Background ---------- */
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animated-bg {
+      background: linear-gradient(-45deg, #001f3f, #003366, #004080, #1e90ff);
+      background-size: 400% 400%;
+      animation: gradientFlow 12s ease infinite;
+    }
+
+    /* ---------- Glass Header ---------- */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      z-index: 50;
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffdd00;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+    header nav a {
+      color: #ffe100;
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 500;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      transition: color 0.3s, transform 0.2s;
+    }
+    header nav a:hover {
+      color: #facc15;
+      transform: translateY(-2px);
+    }
+    body { padding-top: 80px; }
+
+    /* ---------- Preloader Styles ---------- */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #001f3f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    /* Glass overlay for hero section */
+    .glass-overlay {
+      background: rgba(0, 0, 30, 0.35);
+      backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+
+<body class="animated-bg text-white">
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <dotlottie-wc
+      src="https://lottie.host/eec9fab3-e21c-465b-85bf-aee5a082fab0/HFhdbxskX4.lottie"
+      style="width: 200px; height: 200px"
+      autoplay
+      loop
+    ></dotlottie-wc>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">RoomRun</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="track.html">Track your order</a>
+      <a href="explore.html">Explore</a>
+      <a href="login.html">Login</a>
+      <a href="dash.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section id="home" class="relative text-white text-center py-24 px-6 overflow-hidden">
+    <div class="absolute inset-0 glass-overlay z-10"></div>
+
+    <div class="relative z-20 max-w-4xl mx-auto">
+      <h1 class="text-5xl sm:text-6xl font-extrabold drop-shadow-lg mb-4 leading-tight">
+        Deliveries to Your Hostel Room!
+      </h1>
+      <p class="text-lg sm:text-xl mb-10 opacity-90">
+        Food, groceries, and medicines delivered fast — trusted by students across IIIT NR.
+      </p>
+
+      <!-- Boy with Laptop Animation -->
+      <div class="flex justify-center mb-10">
+        <dotlottie-player
+          src="https://lottie.host/b0c7f8f6-dcd0-4398-a927-2a940d94b2d9/5FAfdSlMXf.lottie"
+          background="transparent"
+          speed="1"
+          style="width: 300px; height: 300px"
+          loop
+          autoplay
+        ></dotlottie-player>
+      </div>
+
+      <!-- Explore Button -->
+      <a
+        href="explore.html"
+        class="bg-yellow-400 hover:bg-yellow-500 text-black py-3 px-10 rounded-full font-bold shadow-md transition"
+      >
+        Explore Products
+      </a>
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
+  <section id="products" class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center mb-10">
+        Popular Products
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Product cards here... same as before -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-300 py-10 text-center">
+    <p class="text-sm opacity-75">
+      © 2025 RoomRun – Deliveries made easy at IIIT NR Hostel.
+    </p>
+    <p>Designed by RoomRun Team | <a href="about.html" class="underline hover:text-blue-400">About Developer</a></p>
+  </footer>
+
+  <!-- PRELOADER SCRIPT -->
+  <script type="module">
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      setTimeout(() => {
+        preloader.style.transition = "opacity 0.5s ease";
+        preloader.style.opacity = "0";
+        setTimeout(() => preloader.style.display = "none", 500);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

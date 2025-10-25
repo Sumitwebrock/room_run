@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Run - Explore</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    .modal-bg {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.4); display: none;
+      align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-content {
+      background: white; border-radius: 12px;
+      padding: 30px 20px; min-width: 320px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .hover-scale { transition: transform 0.2s; }
+    .hover-scale:hover { transform: scale(1.02); }
+    .category-tab.active {
+      background-color: #2563eb;
+      color: white;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<header class="bg-blue-600 text-white p-4 flex justify-between items-center sticky top-0 z-40">
+  <div class="flex items-center gap-6">
+    <h1 class="text-xl font-bold">Room Run</h1>
+    <a href="/dash.html" class="hover:text-blue-200 transition">Dashboard</a>
+    <a href="/index.html" class="hover:text-blue-200 transition">Home</a>
+  </div>
+  <div class="flex items-center gap-4">
+    <button onclick="openCartModal()" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded-lg">
+      Cart (<span id="cart-count">0</span>)
+    </button>
+    <span id="user-name" class="font-medium"></span>
+    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Logout</button>
+  </div>
+</header>
+
+<!-- Hero Section with Animation -->
+<section class="flex flex-col md:flex-row items-center justify-center text-center md:text-left gap-6 py-12 bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
+  <div class="max-w-md px-4">
+    <h2 class="text-4xl font-bold mb-3 drop-shadow-lg">Welcome to Room Run</h2>
+    <p class="text-lg opacity-90 mb-4">Delivering food, medicine, and essentials right to your hostel room 🚀</p>
+    <button onclick="scrollToProducts()" 
+            class="bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-blue-100 transition">
+      Explore Now
+    </button>
+  </div>
+
+  <lottie-player 
+    src="https://assets3.lottiefiles.com/packages/lf20_u4yrau.json"  
+    background="transparent"  
+    speed="1"  
+    style="width: 300px; height: 300px;"  
+    loop autoplay>
+  </lottie-player>
+</section>
+
+<main id="product-section" class="container mx-auto px-4 py-8">
+  <!-- Category Tabs -->
+  <div class="flex justify-center gap-4 mb-8 flex-wrap">
+    <button class="category-tab bg-gray-200 text-black px-4 py-2 rounded hover:bg-blue-500 hover:text-white" 
+            onclick="filterItems('medicine', this)">Medicine</button>
+    <button class="category-tab bg-gray-200 text-black px-4 py-2 rounded hover:bg-blue-500 hover:text-white" 
+            onclick="filterItems('food', this)">Food</button>
+    <button class="category-tab bg-gray-200 text-black px-4 py-2 rounded hover:bg-blue-500 hover:text-white" 
+            onclick="filterItems('essentials', this)">Essentials</button>
+    <button class="category-tab bg-gray-200 text-black px-4 py-2 rounded hover:bg-blue-500 hover:text-white" 
+            onclick="filterItems('all', this)">All</button>
+  </div>
+
+  <!-- Products Grid -->
+  <div id="items-grid" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+</main>
+
+<!-- Cart Modal -->
+<div id="cart-modal" class="modal-bg">
+  <div class="modal-content">
+    <h3 class="text-xl font-bold mb-4">Your Cart</h3>
+    <div id="cart-items-list" class="mb-4 text-left"></div>
+    <div id="cart-total" class="mb-4 font-bold"></div>
+    <div class="space-y-2">
+      <button onclick="placeOrder()" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Place Order
+      </button>
+      <button onclick="clearCart()" class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        Clear Cart
+      </button>
+      <button onclick="closeCartModal()" class="w-full text-blue-600 hover:underline">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Product Data
+const items = [
+  // Medicine
+  {type:'medicine', name:'Paracetamol', price: 50, img:'https://cdn-icons-png.flaticon.com/512/2965/2965879.png'},
+  {type:'medicine', name:'Cough Syrup', price: 120, img:'https://cdn-icons-png.flaticon.com/512/3926/3926564.png'},
+  {type:'medicine', name:'Vitamin C Tablets', price: 180, img:'https://cdn-icons-png.flaticon.com/512/2718/2718224.png'},
+
+  // Food
+  {type:'food', name:'Pizza', price: 200, img:'https://cdn-icons-png.flaticon.com/512/1404/1404945.png'},
+  {type:'food', name:'Burger', price: 150, img:'https://cdn-icons-png.flaticon.com/512/1046/1046784.png'},
+  {type:'food', name:'Pasta', price: 170, img:'https://cdn-icons-png.flaticon.com/512/3174/3174880.png'},
+
+  // Essentials
+  {type:'essentials', name:'Toothpaste', price: 40, img:'https://cdn-icons-png.flaticon.com/512/4225/4225900.png'},
+  {type:'essentials', name:'Soap', price: 30, img:'https://cdn-icons-png.flaticon.com/512/415/415682.png'},
+  {type:'essentials', name:'Shampoo', price: 90, img:'https://cdn-icons-png.flaticon.com/512/7736/7736844.png'},
+];
+
+let cart = [];
+const user = JSON.parse(localStorage.getItem('user')) || {};
+if (!user.id) window.location.href = '/login.html';
+
+document.getElementById('user-name').textContent = user.username || user.email;
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('user');
+  window.location.href = '/login.html';
+});
+
+function showNotification(msg, isError = false) {
+  const div = document.createElement('div');
+  div.className = `fixed top-4 right-4 ${isError ? 'bg-red-500' : 'bg-green-500'} text-white px-4 py-2 rounded z-50`;
+  div.textContent = msg;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
+}
+
+function addToCart(item) {
+  cart.push(item);
+  updateCartCount();
+  showNotification(`Added ${item.name} to cart`);
+}
+
+function updateCartCount() {
+  document.getElementById('cart-count').textContent = cart.length;
+}
+
+function renderCartItems() {
+  const listDiv = document.getElementById('cart-items-list');
+  const totalDiv = document.getElementById('cart-total');
+  
+  if (cart.length === 0) {
+    listDiv.innerHTML = '<p class="text-gray-500">Cart is empty</p>';
+    totalDiv.innerHTML = '';
+    return;
+  }
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  listDiv.innerHTML = cart.map(item => `
+    <div class="flex justify-between items-center py-2">
+      <span>${item.name}</span>
+      <span>₹${item.price}</span>
+    </div>
+  `).join('');
+  totalDiv.innerHTML = `Total: ₹${total}`;
+}
+
+function displayItems(filter = 'all') {
+  const grid = document.getElementById('items-grid');
+  grid.innerHTML = items
+    .filter(item => filter === 'all' || item.type === filter)
+    .map(item => `
+      <div class="bg-white rounded-lg shadow-md p-4 hover-scale">
+        <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-contain rounded-lg mb-4 bg-gray-100 p-2">
+        <h3 class="font-semibold text-lg">${item.name}</h3>
+        <p class="text-gray-600 mb-4">₹${item.price}</p>
+        <button onclick='addToCart(${JSON.stringify(item)})' 
+                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+          Add to Cart
+        </button>
+      </div>
+    `).join('');
+}
+
+async function placeOrder() {
+  if (cart.length === 0) {
+    showNotification('Cart is empty!', true);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: user.id,
+        items: cart.map(item => ({
+          name: item.name,
+          quantity: 1,
+          price: item.price
+        }))
+      })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      showNotification('Order placed successfully!');
+      cart = [];
+      updateCartCount();
+      closeCartModal();
+    } else {
+      showNotification(data.message || 'Failed to place order', true);
+    }
+  } catch (err) {
+    console.error(err);
+    showNotification('Server error', true);
+  }
+}
+
+function openCartModal() {
+  renderCartItems();
+  document.getElementById('cart-modal').style.display = 'flex';
+}
+
+function closeCartModal() {
+  document.getElementById('cart-modal').style.display = 'none';
+}
+
+function clearCart() {
+  cart = [];
+  updateCartCount();
+  renderCartItems();
+  showNotification('Cart cleared');
+}
+
+function filterItems(category, btn) {
+  document.querySelectorAll('.category-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  displayItems(category);
+}
+
+function scrollToProducts() {
+  document.getElementById('product-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Initialize
+displayItems();
+updateCartCount();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Room Run - Welcome</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+.auth-form { transition: opacity 0.3s ease, transform 0.3s ease; }
+.form-hidden { opacity: 0; transform: translateY(20px); position: absolute; pointer-events: none; }
+#auth-message { display:none; margin-bottom:1rem; padding:0.5rem; text-align:center; font-weight:500; border-radius:0.5rem; color:#fff; }
+#auth-message.success { background:#16a34a; }
+#auth-message.error { background:#dc2626; }
+.icon-left { position:absolute; left:0.75rem; top:2.4rem; pointer-events:none; color:#9CA3AF; }
+.input-with-icon { padding-left:2.75rem; }
+</style>
+</head>
+<body class="bg-gray-100">
+
+<section class="flex flex-col md:flex-row min-h-screen">
+  <div class="md:w-1/2 flex flex-col justify-center items-center bg-white p-8 md:p-12 relative overflow-hidden">
+    <div id="auth-message" role="status" aria-live="polite"></div>
+
+    <!-- LOGIN -->
+    <div id="login-form-container" class="auth-form w-full max-w-sm">
+      <h2 class="text-3xl font-bold mb-2 text-blue-600">Welcome Back!</h2>
+      <p class="text-gray-600 mb-6">Login to continue your Room Run.</p>
+
+      <form id="loginForm">
+        <div class="relative mb-4">
+          <i data-lucide="mail" class="icon-left"></i>
+          <label for="login-email" class="sr-only">Email</label>
+          <input id="login-email" type="email" required placeholder="your.email@college.com"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <div class="relative mb-6">
+          <i data-lucide="lock" class="icon-left"></i>
+          <label for="login-password" class="sr-only">Password</label>
+          <input id="login-password" type="password" required placeholder="••••••••"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-bold text-lg transition">Login</button>
+      </form>
+
+      <p class="mt-6 text-center text-gray-600">
+        Don't have an account?
+        <a href="#" id="showRegister" class="font-bold text-blue-600 hover:underline">Sign Up</a>
+      </p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-form-container" class="auth-form w-full max-w-sm form-hidden">
+      <h2 class="text-3xl font-bold mb-2 text-blue-600">Create Account</h2>
+      <p class="text-gray-600 mb-6">Get started with Room Run today!</p>
+
+      <form id="registerForm">
+        <div class="relative mb-4">
+          <i data-lucide="user" class="icon-left"></i>
+          <input id="reg-name" type="text" required placeholder="Full name"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <div class="relative mb-4">
+          <i data-lucide="mail" class="icon-left"></i>
+          <input id="reg-email" type="email" required placeholder="your.email@college.com"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <div class="relative mb-4">
+          <i data-lucide="lock" class="icon-left"></i>
+          <input id="reg-password" type="password" required minlength="8" placeholder="Minimum 8 characters"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <div class="relative mb-4">
+          <i data-lucide="book" class="icon-left"></i>
+          <select id="reg-year" required class="input-with-icon w-full p-3 rounded border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" disabled selected>Select Year</option>
+            <option value="1">1st Year</option><option value="2">2nd Year</option>
+            <option value="3">3rd Year</option><option value="4">4th Year</option>
+            <option value="5">5th Year (PG)</option><option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="relative mb-6">
+          <i data-lucide="map-pin" class="icon-left"></i>
+          <input id="reg-hostel" type="text" required placeholder="e.g., Block A, 101"
+                 class="input-with-icon w-full p-3 rounded border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+        </div>
+
+        <button type="submit" class="w-full bg-yellow-400 hover:bg-yellow-500 text-black p-3 rounded-lg font-bold text-lg transition">Create Account</button>
+      </form>
+
+      <p class="mt-6 text-center text-gray-600">
+        Already have an account?
+        <a href="#" id="showLogin" class="font-bold text-blue-600 hover:underline">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="md:w-1/2 bg-blue-600 flex items-center justify-center p-12 relative hidden max-md:block md:block">
+    <div class="text-white text-center max-w-md">
+      <img src="images/hero.jpg" alt="Hero" class="rounded-2xl shadow-2xl w-full mb-6">
+      <h1 class="text-3xl font-bold">Welcome to Room Run</h1>
+      <p class="text-lg mt-3 text-blue-100">Your one-stop solution for campus deliveries. Straight to your room.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+lucide.createIcons();
+
+// Helpers
+function showMessage(msg, success = true) {
+  const div = document.getElementById('auth-message');
+  div.textContent = msg;
+  div.classList.remove('success','error');
+  div.classList.add(success ? 'success' : 'error');
+  div.style.display = 'block';
+  setTimeout(() => div.style.display = 'none', 3000);
+}
+
+function toggleForms(showRegister = true) {
+  const login = document.getElementById('login-form-container');
+  const register = document.getElementById('register-form-container');
+  if (showRegister) {
+    login.classList.add('form-hidden');
+    register.classList.remove('form-hidden');
+  } else {
+    register.classList.add('form-hidden');
+    login.classList.remove('form-hidden');
+  }
+}
+
+// Event bindings
+document.getElementById('showRegister').addEventListener('click', (e)=>{ e.preventDefault(); toggleForms(true); });
+document.getElementById('showLogin').addEventListener('click', (e)=>{ e.preventDefault(); toggleForms(false); });
+
+const apiBase = ''; // use relative paths so same host/port serves API
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  try {
+    const res = await fetch(`${apiBase}/api/auth/login`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem('user', JSON.stringify(data.user || { id: data.userId || data.user?.id, email }));
+      showMessage(data.message || 'Login successful', true);
+      setTimeout(()=> window.location.href = '/dash.html', 800);
+    } else {
+      showMessage(data.message || 'Login failed', false);
+    }
+  } catch (err) {
+    console.error(err);
+    showMessage('Server error. Try again.', false);
+  }
+});
+
+// Register
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const year = document.getElementById('reg-year').value;
+  const hostel = document.getElementById('reg-hostel').value.trim();
+
+  try {
+    const res = await fetch(`${apiBase}/api/auth/register`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username: name, email, password, year, hostel })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showMessage(data.message || 'Registered. Please login.', true);
+      setTimeout(()=> toggleForms(false), 800);
+    } else {
+      showMessage(data.message || 'Registration failed', false);
+    }
+  } catch (err) {
+    console.error(err);
+    showMessage('Server error. Try again.', false);
+  }
+});
+</script>
+
+</body>
+</html>
+<!-- ...existing code... -->
